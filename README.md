@@ -1,15 +1,15 @@
-# 📝 GitNote 2.0
+# 📝 GitNote
 
 > **Empowering your knowledge base with the power of Git.**
 
-GitNote 2.0 is a high-performance, developer-centric Markdown note-taking application. Unlike traditional note apps, GitNote treats your GitHub repositories as first-class citizens, providing seamless, real-time synchronization, intelligent merging, and robust point-in-time recovery.
+GitNote is a high-performance, developer-centric Markdown note-taking application. Unlike traditional note apps, GitNote treats your GitHub repositories as first-class citizens, providing seamless, real-time synchronization, intelligent merging, and robust point-in-time recovery.
 
 ---
 
 ## 🚀 Key Features
 
 ### 🔄 Intelligent Synchronization
-GitNote 2.0 manages your notes with a sophisticated sync engine that handles **Automated Pull/Push cycles**, ensuring your local device and GitHub are always in parity.
+GitNote manages your notes with a sophisticated sync engine that handles **Automated Pull/Push cycles**, ensuring your local device and GitHub are always in parity.
 - **Smart Merge Helper**: Resolves conflicts locally using a triple-diff logic.
 - **Background Sync**: Stays up-to-date even when the app is in the background.
 
