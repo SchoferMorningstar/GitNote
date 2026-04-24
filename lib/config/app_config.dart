@@ -1,3 +1,6 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AppConfig {
-  static const String githubClientId = 'Ov23liRKH3P3kYQ7V3AJ';
+  static String get githubClientId => dotenv.env['GITHUB_CLIENT_ID'] ?? '';
+  static String get tipUrl => dotenv.env['TIP_URL'] ?? '';
 }

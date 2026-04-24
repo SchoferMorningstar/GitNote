@@ -5,6 +5,7 @@ import 'package:github/github.dart' as gh;
 import '../providers/github_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/note_provider.dart';
+import 'commit_detail_screen.dart';
 
 class RecoveryScreen extends StatefulWidget {
   const RecoveryScreen({super.key});
@@ -28,7 +29,7 @@ class _RecoveryScreenState extends State<RecoveryScreen> {
     final github = context.read<GitHubProvider>();
     
     if (settings.selectedRepoFullName != null) {
-      final commits = await github.fetchCommits(settings.selectedRepoFullName!);
+      final commits = await github.fetchCommits(settings.githubToken!, settings.selectedRepoFullName!);
       setState(() {
         _commits = commits;
         _isLoading = false;
@@ -41,72 +42,12 @@ class _RecoveryScreenState extends State<RecoveryScreen> {
   }
 
   void _showRestoreDialog(gh.RepositoryCommit commit) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Restoration'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Are you sure you want to restore your repository to this state?'),
-            const SizedBox(height: 16),
-            const Text('WARNING:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
-            const Text('This will overwrite all your current local notes with the versions from this commit.'),
-            const SizedBox(height: 8),
-            Text('Commit: ${commit.commit?.message ?? "No message"}', style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            onPressed: () async {
-              Navigator.pop(ctx);
-              _performRestore(commit.sha!);
-            },
-            child: const Text('RESTORE'),
-          ),
-        ],
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CommitDetailScreen(commit: commit),
       ),
     );
-  }
-
-  Future<void> _performRestore(String sha) async {
-    final settings = context.read<SettingsProvider>();
-    final github = context.read<GitHubProvider>();
-    final noteProvider = context.read<NoteProvider>();
-
-    // Show Progress
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      await github.restoreFromCommit(
-        token: settings.githubToken!,
-        repoFullName: settings.selectedRepoFullName!,
-        sha: sha,
-        noteProvider: noteProvider,
-      );
-      
-      if (mounted) {
-        Navigator.pop(context); // Close progress
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Repository successfully restored!')),
-        );
-        Navigator.pop(context); // Go back home
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Restore failed: $e')),
-        );
-      }
-    }
   }
 
   @override

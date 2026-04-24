@@ -29,7 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final settings = context.read<SettingsProvider>();
     final github = context.read<GitHubProvider>();
     final noteProvider = context.read<NoteProvider>();
-    github.startAutoPull(settings, noteProvider);
+    noteProvider.applySorting(settings.sortType, settings.sortOrder);
+    github.startAutoPull(settings, () => noteProvider.refresh());
   }
 
   void _showNewFolderDialog(BuildContext context) {
@@ -248,6 +249,62 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text(noteProvider.isAtRoot ? 'GitNote' : noteProvider.currentDirName),
             centerTitle: true,
             actions: [
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.sort),
+                tooltip: 'Sort by',
+                onSelected: (value) async {
+                  final s = context.read<SettingsProvider>();
+                  final np = context.read<NoteProvider>();
+                  SortType type = s.sortType;
+                  SortOrder order = s.sortOrder;
+
+                  if (value == 'name_asc') { type = SortType.name; order = SortOrder.ascending; }
+                  else if (value == 'name_desc') { type = SortType.name; order = SortOrder.descending; }
+                  else if (value == 'time_desc') { type = SortType.time; order = SortOrder.descending; }
+                  else if (value == 'time_asc') { type = SortType.time; order = SortOrder.ascending; }
+
+                  await s.setSortType(type);
+                  await s.setSortOrder(order);
+                  np.applySorting(type, order);
+                },
+                itemBuilder: (context) {
+                  final s = context.read<SettingsProvider>();
+                  return [
+                    PopupMenuItem(
+                      value: 'name_asc',
+                      child: Row(children: [
+                        Icon(Icons.sort_by_alpha, color: s.sortType == SortType.name && s.sortOrder == SortOrder.ascending ? Theme.of(context).colorScheme.primary : null),
+                        const SizedBox(width: 8),
+                        const Text('Name (A-Z)'),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: 'name_desc',
+                      child: Row(children: [
+                        Icon(Icons.sort_by_alpha, color: s.sortType == SortType.name && s.sortOrder == SortOrder.descending ? Theme.of(context).colorScheme.primary : null),
+                        const SizedBox(width: 8),
+                        const Text('Name (Z-A)'),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: 'time_desc',
+                      child: Row(children: [
+                        Icon(Icons.access_time, color: s.sortType == SortType.time && s.sortOrder == SortOrder.descending ? Theme.of(context).colorScheme.primary : null),
+                        const SizedBox(width: 8),
+                        const Text('Newest First'),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: 'time_asc',
+                      child: Row(children: [
+                        Icon(Icons.access_time, color: s.sortType == SortType.time && s.sortOrder == SortOrder.ascending ? Theme.of(context).colorScheme.primary : null),
+                        const SizedBox(width: 8),
+                        const Text('Oldest First'),
+                      ]),
+                    ),
+                  ];
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () => Navigator.push(
@@ -259,19 +316,53 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: noteProvider.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : noteProvider.nodes.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No notes yet.\nTap + to create one!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (noteProvider.availableTags.isNotEmpty)
+                      Container(
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.2))),
+                        ),
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          itemCount: noteProvider.availableTags.length,
+                          separatorBuilder: (context, index) => const SizedBox(width: 8),
+                          itemBuilder: (context, index) {
+                            final tag = noteProvider.availableTags[index];
+                            final isSelected = noteProvider.selectedTagFilter == tag;
+                            return ChoiceChip(
+                              label: Text('@$tag'),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                noteProvider.setTagFilter(tag);
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 100),
-                      itemCount: noteProvider.nodes.length,
-                      itemBuilder: (context, index) => _buildNodeItem(context, noteProvider.nodes[index], noteProvider),
+                    Expanded(
+                      child: noteProvider.nodes.isEmpty
+                          ? Center(
+                              child: Text(
+                                noteProvider.selectedTagFilter != null
+                                    ? 'No notes found for @${noteProvider.selectedTagFilter}'
+                                    : 'No notes yet.\nTap + to create one!',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 18, color: Colors.grey),
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 100),
+                              itemCount: noteProvider.nodes.length,
+                              itemBuilder: (context, index) => _buildNodeItem(context, noteProvider.nodes[index], noteProvider),
+                            ),
                     ),
+                  ],
+                ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: Container(
             height: 64,
@@ -296,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         github.pullLatestNotes(
                           token: settings.githubToken!,
                           repoFullName: settings.selectedRepoFullName!,
-                          noteProvider: context.read<NoteProvider>(),
+                          onSyncComplete: () => context.read<NoteProvider>().refresh(),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

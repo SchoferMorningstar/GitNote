@@ -1,4 +1,4 @@
-# 📝 GitNote
+# 📝 GitNote 
 
 > **Empowering your knowledge base with the power of Git.**
 
@@ -6,7 +6,17 @@ GitNote is a high-performance, developer-centric Markdown note-taking applicatio
 
 ---
 
-## 🚀 Key Features
+## 🚀 Key Features in v1.1.0
+
+### 🏷️ Advanced Visual Tagging System
+- **@Tags**: Organize your notes effortlessly by typing `@tags` anywhere in your markdown.
+- **Deep Filtering**: Tap a tag on the Home Screen to instantly filter and surface all matching notes across your *entire directory tree*.
+- **Vibrant Tags Bar**: A dedicated visual bar in the editor beautifully separates your tags from plain text.
+
+### ✍️ Professional Native Editor & Live Mode
+- **Live Markdown Editing**: Toggle Live Edit Mode in Settings to instantly render formatting as you type!
+- **Sleek Formatting Toolbar**: A feature-rich toolbar offering quick-access to Bold, Italic, Headings, Lists, Images, and one-tap tag insertion.
+- **Seamless Cursor Management**: Effortlessly place your cursor precisely where you want it.
 
 ### 🔄 Intelligent Synchronization
 GitNote manages your notes with a sophisticated sync engine that handles **Automated Pull/Push cycles**, ensuring your local device and GitHub are always in parity.
@@ -16,10 +26,11 @@ GitNote manages your notes with a sophisticated sync engine that handles **Autom
 ### 🛡️ Time-Travel Recovery
 Lost a note? Deleted a folder? No problem.
 - **Commit History**: Browse the last 20 commits directly from the app.
-- **Full Restore**: Perform a "Hard Reset" of your local workspace to any historical point in your GitHub history.
+- **Granular Restore**: Perform file-level or folder-level restorations of your local workspace from any point in your GitHub history without wiping your entire app.
 
 ### 🎨 Premium User Experience
 - **Material 3 UI**: A sleek Indigo & Emerald theme designed for focus and productivity.
+- **File Tree Sorting**: Sort your notes alphabetically or by Date Modified.
 - **Unified Controls**: A custom Floating Control Bar for single-tap sync and note creation.
 - **Drag-and-Drop**: Organize your notes effortlessly with intuitive folder movement.
 
@@ -60,6 +71,7 @@ flutter build apk --release
 
 ## 🏷️ Configuration
 The app uses a secure Device Flow for GitHub authentication. No manual token entry required! The `clientId` is pre-configured in `AppConfig`.
+You can support the developer directly through the app by configuring `TIP_URL` in your `.env` file!
 
 ---
 
@@ -67,6 +79,7 @@ The app uses a secure Device Flow for GitHub authentication. No manual token ent
 - [x] GitHub Sync & Conflict Resolution
 - [x] Point-in-time Recovery
 - [x] Material 3 Visual Overhaul
+- [x] Advanced Tagging & Deep Filtering
 - [ ] Multi-repository support
 - [ ] End-to-end encryption for private repos
 

@@ -5,6 +5,7 @@ import 'package:github/github.dart' as gh;
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/settings_provider.dart';
 import '../providers/github_provider.dart';
+import '../config/app_config.dart';
 import 'recovery_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -172,9 +173,9 @@ class SettingsScreen extends StatelessWidget {
                         return ListTile(
                           leading: const Icon(Icons.inventory_2_outlined),
                           title: Text(repo.fullName),
-                          subtitle: Text(repo.description == null || repo.description!.isEmpty 
+                          subtitle: Text(repo.description.isEmpty 
                               ? 'No description' 
-                              : repo.description!),
+                              : repo.description),
                           selected: settings.selectedRepoFullName == repo.fullName,
                           onTap: () {
                             settings.setSelectedRepo(repo.fullName);
@@ -364,6 +365,31 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                 ],
+              ),
+            ),
+          ],
+          
+          if (AppConfig.tipUrl.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Support the Developer'),
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: ListTile(
+                leading: const Icon(Icons.favorite, color: Colors.pink),
+                title: const Text('Tip the Developer'),
+                subtitle: const Text('Buy me a coffee if you like this app!'),
+                trailing: const Icon(Icons.open_in_new),
+                onTap: () async {
+                  final url = Uri.parse(AppConfig.tipUrl);
+                  try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Could not open the tip link. Please check your browser.')),
+                      );
+                    }
+                  }
+                },
               ),
             ),
           ],

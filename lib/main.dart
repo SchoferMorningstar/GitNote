@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'providers/github_provider.dart';
 import 'providers/note_provider.dart';
 import 'providers/settings_provider.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+import 'core/services/github_api_service.dart';
+import 'core/services/local_file_service.dart';
+import 'core/services/sync_manager.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+
+  final localFileService = LocalFileService();
+  final githubApiService = GitHubApiService();
+  final syncManager = SyncManager(githubApiService, localFileService);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
-        ChangeNotifierProvider(create: (_) => NoteProvider()),
-        ChangeNotifierProvider(create: (_) => GitHubProvider()),
+        ChangeNotifierProvider(create: (_) => NoteProvider(localFileService)),
+        ChangeNotifierProvider(create: (_) => GitHubProvider(githubApiService, syncManager)),
       ],
       child: const GitNoteApp(),
     ),

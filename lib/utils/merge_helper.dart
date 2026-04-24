@@ -16,10 +16,6 @@ class MergeHelper {
     // If they can be cleanly patched (no overlaps), we do it.
     // If not, we wrap the whole thing in markers or line-by-line.
     
-    // Let's implement a more "Pro" line-based conflict detection.
-    final localLines = local.split('\n');
-    final remoteLines = remote.split('\n');
-    
     // If they have common prefix/suffix, we can be smarter.
     // But since notes are small, we can just do a full conflict if they differ significantly.
     

@@ -42,6 +42,12 @@ class NoteNode extends FileSystemNode {
     }
     return '';
   }
+
+  List<String> get tags {
+    final regex = RegExp(r'(?:^|\s)@([a-zA-Z0-9_-]+)');
+    final matches = regex.allMatches(content);
+    return matches.map((m) => m.group(1)!.toLowerCase()).toSet().toList();
+  }
 }
 
 extension StringExtension on String {
