@@ -1,87 +1,81 @@
-# 📝 GitNote 
+# 📝 GitNote
 
-> **Empowering your knowledge base with the power of Git.**
+> **The Professional, Git-Backed Markdown Workspace.**
 
-GitNote is a high-performance, developer-centric Markdown note-taking application. Unlike traditional note apps, GitNote treats your GitHub repositories as first-class citizens, providing seamless, real-time synchronization, intelligent merging, and robust point-in-time recovery.
-
----
-
-## 🚀 Key Features in v1.1.0
-
-### 🏷️ Advanced Visual Tagging System
-- **@Tags**: Organize your notes effortlessly by typing `@tags` anywhere in your markdown.
-- **Deep Filtering**: Tap a tag on the Home Screen to instantly filter and surface all matching notes across your *entire directory tree*.
-- **Vibrant Tags Bar**: A dedicated visual bar in the editor beautifully separates your tags from plain text.
-
-### ✍️ Professional Native Editor & Live Mode
-- **Live Markdown Editing**: Toggle Live Edit Mode in Settings to instantly render formatting as you type!
-- **Sleek Formatting Toolbar**: A feature-rich toolbar offering quick-access to Bold, Italic, Headings, Lists, Images, and one-tap tag insertion.
-- **Seamless Cursor Management**: Effortlessly place your cursor precisely where you want it.
-
-### 🔄 Intelligent Synchronization
-GitNote manages your notes with a sophisticated sync engine that handles **Automated Pull/Push cycles**, ensuring your local device and GitHub are always in parity.
-- **Smart Merge Helper**: Resolves conflicts locally using a triple-diff logic.
-- **Background Sync**: Stays up-to-date even when the app is in the background.
-
-### 🛡️ Time-Travel Recovery
-Lost a note? Deleted a folder? No problem.
-- **Commit History**: Browse the last 20 commits directly from the app.
-- **Granular Restore**: Perform file-level or folder-level restorations of your local workspace from any point in your GitHub history without wiping your entire app.
-
-### 🎨 Premium User Experience
-- **Material 3 UI**: A sleek Indigo & Emerald theme designed for focus and productivity.
-- **File Tree Sorting**: Sort your notes alphabetically or by Date Modified.
-- **Unified Controls**: A custom Floating Control Bar for single-tap sync and note creation.
-- **Drag-and-Drop**: Organize your notes effortlessly with intuitive folder movement.
+GitNote is a high-performance, developer-centric note-taking application designed for those who value privacy, version control, and the simplicity of Markdown. By treating your GitHub repositories as a first-class file system, GitNote ensures your knowledge base is always synced, versioned, and under your absolute control.
 
 ---
 
-## 🛠️ Technical Architecture
+## 🌟 Why GitNote?
 
-```mermaid
-graph TD
-    A[Local Storage] -->|Push on Save| B(GitNote Sync Engine)
-    B -->|REST API| C[GitHub Repository]
-    C -->|Auto-Pull| B
-    B -->|Merge Helper| A
-```
+In an era of proprietary note formats and cloud lock-ins, GitNote stands apart by using standard Markdown and the industrial-strength versioning of Git.
 
-### Stack
-- **Flutter**: Cross-platform frontend excellence.
-- **Provider**: Robust reactive state management.
-- **GitHub REST API**: Level 3 hypermedia integration.
-- **Material 3**: The latest design tokens from Google.
+- **🛡️ Full Ownership:** Your notes live in your GitHub repository. No proprietary servers, no data harvesting.
+- **🔄 Industrial Sync:** Powered by a sophisticated Git-based synchronization engine that handles automated pull/push cycles and intelligent conflict resolution.
+- **🛡️ Point-in-Time Recovery:** Navigate your note history with ease. Restore entire folders or individual files from any previous Git commit.
+- **🏷️ Deep Tagging:** A specialized tagging system (`@tag`) that works across your entire directory tree with recursive filtering.
 
 ---
 
-## 📥 Installation
+## 🚀 Core Features
 
-### Developer Setup
-1. **Clone**: `git clone https://github.com/SchoferMorningstar/GitNote.git`
-2. **Setup**: `flutter pub get`
-3. **Run**: `flutter run`
+### 🖋️ Professional Markdown Editor
+- **Hybrid Editing:** Switch between a native high-performance text field and a **Live Edit Mode** that renders formatting in real-time.
+- **Rich Toolbar:** One-tap access to headings, lists, code blocks, images, and links.
+- **Precision Focus:** Optimized cursor management and hit-testing for a seamless mobile writing experience.
 
-### Release Build
-To generate a production APK:
-```bash
-flutter build apk --release
-```
+### 🏷️ Intelligent Organization
+- **Global Tagging:** Use `@tag` syntax to categorize notes.
+- **Recursive Search:** Filter your entire repository from the home screen; find notes buried deep in subdirectories instantly.
+- **Dynamic Sorting:** Organize your workspace by Name or Date Modified with persistent user preferences.
 
----
-
-## 🏷️ Configuration
-The app uses a secure Device Flow for GitHub authentication. No manual token entry required! The `clientId` is pre-configured in `AppConfig`.
-You can support the developer directly through the app by configuring `TIP_URL` in your `.env` file!
+### 🔄 Advanced Synchronization
+- **Background Persistence:** Configurable auto-pull intervals to keep your devices in sync without manual intervention.
+- **Conflict Resolution:** Local triple-diff merging logic ensures you never lose data during a sync conflict.
+- **Encrypted Metadata:** Secure storage of GitHub tokens and sensitive configuration.
 
 ---
 
-## 📜 Roadmap
-- [x] GitHub Sync & Conflict Resolution
-- [x] Point-in-time Recovery
-- [x] Material 3 Visual Overhaul
-- [x] Advanced Tagging & Deep Filtering
-- [ ] Multi-repository support
-- [ ] End-to-end encryption for private repos
+## 🛠️ Technical Stack
+
+- **Framework:** [Flutter](https://flutter.dev) (Cross-platform performance)
+- **Engine:** [GitHub REST API v3](https://docs.github.com/en/rest)
+- **State Management:** Provider (Reactive Architecture)
+- **Design System:** Material 3 (Adaptive & Modern)
 
 ---
-Developed by **SchoferMorningstar**.
+
+## 📥 Getting Started
+
+### Prerequisites
+- Flutter SDK (>= 3.10.0)
+- A GitHub Account
+
+### Installation
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/SchoferMorningstar/GitNote.git
+   ```
+2. **Install Dependencies:**
+   ```bash
+   flutter pub get
+   ```
+3. **Configure Environment:**
+   Create a `.env` file in the root directory and add your `GITHUB_CLIENT_ID`.
+4. **Run the App:**
+   ```bash
+   flutter run
+   ```
+
+---
+
+## 📜 Release History
+
+| Version | Features Added | Improvements & Bug Fixes |
+| :--- | :--- | :--- |
+| **v1.1.0** | Recursive Tagging System (`@tags`), Visual Tag Chips Bar, Live Edit Mode Toggle, Formatting Toolbar, Sorting (Name/Date), Support Tip integrations. | Resolved cursor jump issues in editor, optimized hit-testing for hit-scrolling, enhanced recovery flow with file-specific restoration. |
+| **v1.0.0** | Initial Release, GitHub Sync Engine, Automated Pull/Push, Hard Recovery System, Material 3 UI Overhaul. | Initial stabilization of Git sync logic. |
+
+---
+
+Developed with ❤️ by **SchoferMorningstar**.
